@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: faiss
+Description: The foo library
+Version: 1.7.2
+Requires: mkl-sdl-ilp64
+Cflags: -I${includedir}
+Libs: -L${libdir} -lfaiss_c -lfaiss -lstdc++ -lomp5 -lm
+

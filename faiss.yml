@@ -1,0 +1,75 @@
+---
+GENERATOR:
+  PackageName: gofaiss
+  PackageDescription: ""
+  PackageLicense: ""
+  PkgConfigOpts: [ "faiss" ]
+  Includes: [ "faiss.h" ]
+  Options:
+    SafeStrings: true
+    StruckAccessors: true
+PARSER:
+  IncludePaths: [ "/usr/local/include/faiss/c_api" ]
+  SourcesPaths: [
+      "AutoTune_c.h",
+      "Clustering_c.h",
+      "IndexFlat_c.h",
+      "IndexIVFFlat_c.h",
+      "IndexIVF_c.h",
+      "IndexLSH_c.h",
+      "IndexPreTransform_c.h",
+      "IndexReplicas_c.h",
+      "IndexScalarQuantizer_c.h",
+      "IndexShards_c.h",
+      "Index_c.h",
+      "MetaIndexes_c.h",
+      "VectorTransform_c.h",
+      "clone_index_c.h",
+      "error_c.h",
+      "faiss_c.h",
+      "index_factory_c.h",
+      "index_io_c.h",
+  ]
+TRANSLATOR:
+  ConstRules:
+    defines: expand
+    enum: expand
+  PtrTips:
+    function:
+      - { target: "faiss_ParameterRange_values", default: "ref" }
+      - { target: "faiss_Clustering_centroids", default: "ref" }
+      - { target: "faiss_IndexFlat_xb", default: "ref" }
+      - { target: "faiss_IndexIDMap_id_map", default: "ref" }
+      - { target: "faiss_IndexIDMap2_id_map", default: "ref" }
+      - { target: "^faiss", default: "sref" }
+  MemTips:
+    - { target: "^faiss", default: "raw" }
+  Rules:
+    const:
+      - { action: accept, from: "^FAISS_" }
+      - { action: accept, from: "^faiss" }
+      - { action: accept, from: "^Faiss" }
+      - { action: accept, from: "^METRIC" }
+      - { action: accept, from: "^QT" }
+      - { action: accept, from: "EXCEPT$" }
+      - { action: accept, from: "^OK$" }
+      - { transform: export }
+    type:
+      - { action: accept, from: "^FAISS_" }
+      - { action: accept, from: "^faiss" }
+      - { action: replace, from: "^faiss" }
+      - { action: accept, from: "^Faiss" }
+      - { action: replace, from: "_t$" }
+      - { transform: export }
+      - { load: snakecase }
+    function:
+      - { action: ignore, from: "^faiss_IndexIVFScalarQuantizer_new$" }
+      - { action: ignore, from: "^faiss_IndexIVFScalarQuantizer_new_with$" }
+      - { action: ignore, from: "^faiss_write_index$" }
+      - { action: ignore, from: "^faiss_read_index$" }
+      - { action: accept, from: "^faiss" }
+      - { action: replace, from: "^faiss_" }
+      - { transform: export }
+      - { load: snakecase }    
+
+
