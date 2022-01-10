@@ -1,3 +1,6 @@
+#ifndef GOFAISS_H
+#define GOFAISS_H
+
 #include "faiss/c_api/AutoTune_c.h"
 #include "faiss/c_api/Clustering_c.h"
 #include "faiss/c_api/IndexFlat_c.h"
@@ -16,4 +19,7 @@
 #include "faiss/c_api/faiss_c.h"
 #include "faiss/c_api/index_factory_c.h"
 #include "faiss/c_api/index_io_c.h"
+#include "faiss/c_api/impl/AuxIndexStructures_c.h"
+#include "faiss/c_api/utils/distances_c.h"
 
+#endif

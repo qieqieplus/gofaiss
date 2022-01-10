@@ -7,7 +7,6 @@ GENERATOR:
   Includes: [ "faiss.h" ]
   Options:
     SafeStrings: true
-    StruckAccessors: true
 PARSER:
   IncludePaths: [ "/usr/local/include/faiss/c_api" ]
   SourcesPaths: [
@@ -29,6 +28,8 @@ PARSER:
       "faiss_c.h",
       "index_factory_c.h",
       "index_io_c.h",
+      "impl/AuxIndexStructures_c.h",
+      "utils/distances_c.h"
   ]
 TRANSLATOR:
   ConstRules:
@@ -41,6 +42,8 @@ TRANSLATOR:
       - { target: "faiss_IndexFlat_xb", default: "ref" }
       - { target: "faiss_IndexIDMap_id_map", default: "ref" }
       - { target: "faiss_IndexIDMap2_id_map", default: "ref" }
+      - { target: "faiss_RangeSearchResult_lims", default: "ref" }
+      - { target: "faiss_RangeSearchResult_labels", default: "ref" }
       - { target: "^faiss", default: "sref" }
   MemTips:
     - { target: "^faiss", default: "raw" }
@@ -71,5 +74,4 @@ TRANSLATOR:
       - { action: replace, from: "^faiss_" }
       - { transform: export }
       - { load: snakecase }    
-
 

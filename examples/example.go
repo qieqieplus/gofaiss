@@ -4,10 +4,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/qieqieplus/gofaiss"
-	"math"
 	"math/rand"
 	"time"
+
+	"github.com/qieqieplus/gofaiss"
 )
 
 func main() {
@@ -22,16 +22,16 @@ func main() {
 
 	for i := 0; i < nb; i++ {
 		for j := 0; j < d; j++ {
-			xb[d*i+j] = rand.Float32() / math.MaxFloat32
+			xb[d*i+j] = rand.Float32()
 		}
-		xb[d*i] += float32(i) / 1000.0
+		xb[d*i] += float32(i / 1000)
 	}
 
 	for i := 0; i < nq; i++ {
 		for j := 0; j < d; j++ {
-			xq[d*i+j] = rand.Float32() / math.MaxFloat32
+			xq[d*i+j] = rand.Float32()
 		}
-		xq[d*i] += float32(i) / 1000.0
+		xq[d*i] += float32(i / 1000)
 	}
 
 	fmt.Println("Building an index...")
@@ -40,8 +40,39 @@ func main() {
 	trained := gofaiss.IndexIsTrained(index) > 0
 	fmt.Printf("is_trained = %v\n", trained)
 
-	gofaiss.IndexAdd(index, int32(nb), &xb[0])
+	gofaiss.IndexAdd(index, nb, &xb[0])
 	total := gofaiss.IndexNtotal(index)
 	fmt.Printf("ntotal = %v\n", total)
-}
 
+	{
+		n, k := 5, 5
+		I := make([]int, k*n)
+		D := make([]float32, k*n)
+		gofaiss.IndexSearch(index, n, &xb[0], k, &D[0], &I[0])
+		fmt.Printf("I=\n")
+		for i := 0; i < n; i++ {
+			for j := 0; j < k; j++ {
+				fmt.Printf("%5d (d=%2.3f)  ", I[i*k+j], D[i*k+j])
+			}
+			fmt.Println("")
+		}
+	}
+
+	{
+		k := 5
+		I := make([]int, k*nq)
+		D := make([]float32, k*nq)
+		gofaiss.IndexSearch(index, nq, &xq[0], k, &D[0], &I[0])
+		fmt.Printf("I=\n")
+		for i := 0; i < nq; i++ {
+			for j := 0; j < k; j++ {
+				fmt.Printf("%5d (d=%2.3f)  ", I[i*k+j], D[i*k+j])
+			}
+			fmt.Println("")
+		}
+	}
+
+	fmt.Println("Freeing index...")
+	gofaiss.IndexFree(index)
+	fmt.Println("Done.")
+}
